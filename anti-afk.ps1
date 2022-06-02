@@ -52,22 +52,16 @@ While ($true) {
     $last_action = "none"
 
     if ($idle -gt $threshold){
-        if($wshell.AppActivate('Unbenannt - Editor')) {
-            $wshell.SendKeys('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-            Sleep 0.1
-            $wshell.SendKeys('^A')
-            $wshell.SendKeys('{BKSP}')
-            $last_action = "press keys"
-        } else {
-            Start-Process -FilePath "C:\WINDOWS\system32\notepad.exe"
-            $last_action = "open editor"
-        }
+        $wshell.SendKeys("{SCROLLLOCK}")
+        Sleep 0.1
+        $wshell.SendKeys("{SCROLLLOCK}")
+        last_action = "key pressed"
     } else {
         last_action = "no action"
     }
 
     Clear-Host
-    "Last Response from User: $lastinput"
+    "Last Response: {0}" -f $lastinput.ToLocalTime()
     "Seconds since last input: $idle"
     "Last Action = $last_action"
 
