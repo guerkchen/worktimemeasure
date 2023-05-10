@@ -57,18 +57,18 @@ $afkStart = $null
 [console]::BufferWidth=[console]::WindowWidth
 
 While ($true) {
-    $locked = Get-Process logonui -ErrorAction SilentlyContinue ## locked -eq $null, wenn der Rechner NICHT gesperrt ist
+    $locked = Get-Process logonui -ErrorAction SilentlyContinue ## locked -ne $null, wenn der Rechner gesperrt ist
     if($locked -ne $null -and -not $afk) {
         # Nutzer ist AFK gegangen
         $afk = $true
 
         $afkStart = Get-Date # Startzeit erfassen
-    } elseif ($afk) {
+    } elseif ($locked -eq $null -and $afk) { ## locked -eq $null, wenn der Rechner NICHT gesperrt ist
         # Nutzer ist wieder da
         $afk = $false
 
         $afkTimespan += New-Timespan -Start $afkStart
-    } else {
+    } elseif ($locked -eq $null) {
         # Rechner ist schon länger (min. 20 Sekunden) nicht gesperrt 
         $idleSeconds = [PInvoke.Win32.UserInput]::IdleTime.TotalSeconds
 
